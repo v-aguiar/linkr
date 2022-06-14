@@ -15,6 +15,18 @@ export const Container = styled.main`
     font-weight: 400;
     font-size: 17px;
   }
+
+  @media (min-width: 1023px) {
+    display: flex;
+
+    .content {
+      width: 37%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+  }
 `;
 
 export const Form = styled.form`
@@ -50,10 +62,11 @@ export const Form = styled.form`
   }
 
   button {
-    background-color: #1877f2;
+    background-color: ${(props) => (props.disable ? "#87b1e5" : "#1877F2")};
     color: white;
     font-family: "oswald", sans-serif;
     font-size: 22px;
+    cursor: ${(props) => (props.disable ? "default" : "pointer")};
   }
 `;
 
@@ -78,5 +91,24 @@ export const TitleBox = styled.div`
     width: 237px;
     text-align: center;
     line-height: 34px;
+  }
+
+  @media (min-width: 1023px) {
+    width: 63%;
+    height: 100%;
+    display: block;
+    padding-left: 144px;
+    padding-top: 301px;
+
+    h3 {
+      text-align: start;
+      font-size: 43px;
+      width: 442px;
+      line-height: 64px;
+    }
+
+    h1 {
+      font-size: 106px;
+    }
   }
 `;
