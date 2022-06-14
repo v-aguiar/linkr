@@ -65,6 +65,7 @@ export default function RegisterPage() {
             name="email"
             value={email}
             onChange={handleInput}
+            disabled={submited}
           />
           <input
             type="password"
@@ -73,6 +74,7 @@ export default function RegisterPage() {
             name="password"
             value={password}
             onChange={handleInput}
+            disabled={submited}
           />
           <input
             type="text"
@@ -81,6 +83,7 @@ export default function RegisterPage() {
             name="username"
             value={username}
             onChange={handleInput}
+            disabled={submited}
           />
           <input
             type="url"
@@ -89,6 +92,7 @@ export default function RegisterPage() {
             name="imgUrl"
             value={imgUrl}
             onChange={handleInput}
+            disabled={submited}
           />
           <button
             type="submit"
