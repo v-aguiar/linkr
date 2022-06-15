@@ -5,6 +5,8 @@ import UserContext from "../../contexts/UserContext";
 
 import GlobalStyles from "../../assets/styles/globalStyles";
 
+import RegisterPage from "../../pages/RegisterPage";
+
 function App() {
   const [token, setToken] = useState(null);
   const value = { token, setToken };
@@ -14,7 +16,8 @@ function App() {
       <Router>
         <GlobalStyles />
         <Routes>
-          <Route /> {/* TODO: Implement routes */}
+          <Route path="/sign-up" element={<RegisterPage />} />
+          {/* TODO: Implement routes */}
         </Routes>
       </Router>
     </UserContext.Provider>
