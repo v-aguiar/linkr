@@ -6,10 +6,14 @@ import UserContext from "../../contexts/UserContext";
 import GlobalStyles from "../../assets/styles/globalStyles";
 
 import RegisterPage from "../../pages/RegisterPage";
+import LoginPage from "../../pages/LoginPage";
+import TimelinePage from "../../pages/TimelinePage";
 
 function App() {
-  const [token, setToken] = useState(null);
-  const value = { token, setToken };
+  const [userInfo, setUserInfo] = useState(
+    JSON.parse(localStorage.getItem("UserInfo"))
+  );
+  const value = { userInfo, setUserInfo };
 
   return (
     <UserContext.Provider value={value}>
@@ -17,7 +21,8 @@ function App() {
         <GlobalStyles />
         <Routes>
           <Route path="/sign-up" element={<RegisterPage />} />
-          {/* TODO: Implement routes */}
+          <Route path="/" element={<LoginPage />} />
+          <Route path="/timeline" element={<TimelinePage />} />
         </Routes>
       </Router>
     </UserContext.Provider>
