@@ -28,9 +28,17 @@ export const StyledLikeButton = styled.button`
 export const HeartLine = styled(RiHeartLine)`
   color: #fff;
   font-size: 1.125rem;
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 export const HeartFill = styled(RiHeartFill)`
   color: red;
   font-size: 1.125rem;
+
+  &:hover {
+    cursor: pointer;
+  }
 `;

@@ -5,15 +5,14 @@ import api from "../../services/api";
 
 import { StyledLikeButton, HeartFill, HeartLine } from "./style";
 
-export default function LikeButton({ userId = 6, postId = 1 }) {
+export default function LikeButton({ userId = 6, postId = 4 }) {
   const [showTooltip, setShowTooltip] = useState(true);
   const [liked, setLiked] = useState(false);
   const [likes, setLikes] = useState({
     total: "0",
     user: "0",
   });
-  // TODO: get users who liked the post before
-  const [likeUsers, setLikeUsers] = useState({
+  const [whoElseLiked, setWhoElseLiked] = useState({
     first: "",
     second: "",
   });
@@ -21,15 +20,25 @@ export default function LikeButton({ userId = 6, postId = 1 }) {
   useEffect(() => {
     const fetchLikes = async () => {
       const totalLikes = await api.get(`likes/${postId}/`);
+      const likesCount = totalLikes.data?.likes;
 
-      setLikes({ ...likes, total: totalLikes.data.likes });
+      setLikes({ ...likes, total: likesCount });
     };
 
+    fetchLikes().catch((err) => {
+      console.error("⚠ Error fetching total likes: ", err);
+      return;
+    });
+  }, []); // eslint-disable-line
+
+  useEffect(() => {
     const fetchUserLike = async () => {
       const userLike = await api.get(`likes/${postId}/?userId=${userId}`);
       setLikes({ ...likes, user: userLike.data.likes * 1 });
       if (userLike.data.likes * 1 === 1) {
         setLiked(true);
+        setLikes({ ...likes, total: likes.total * 1 + 1 });
+        return;
       }
     };
 
@@ -37,9 +46,22 @@ export default function LikeButton({ userId = 6, postId = 1 }) {
       console.error("⚠ Error fetching user like: ", err);
       return;
     });
+  }, []); // eslint-disable-line
 
-    fetchLikes().catch((err) => {
-      console.error("⚠ Error fetching total likes: ", err);
+  useEffect(() => {
+    const fetchWhoElseLiked = async () => {
+      const whoElseLikedResponse = await api.get(
+        `likes/who/${postId}/${userId}`
+      );
+
+      setWhoElseLiked({
+        first: whoElseLikedResponse.data[0]?.username,
+        second: whoElseLikedResponse.data[1]?.username,
+      });
+    };
+
+    fetchWhoElseLiked().catch((err) => {
+      console.error("⚠ Error fetching who else liked: ", err);
       return;
     });
   }, []); // eslint-disable-line
@@ -53,29 +75,33 @@ export default function LikeButton({ userId = 6, postId = 1 }) {
 
   function likeDataTip() {
     // TODO: refactor function for better performance
-    if (likes.total * 1 === 0) {
-      return "Curtir!";
-    }
     if (liked && likes.total * 1 === 1) {
-      return `Você curtiu este post`;
+      return `You liked this post`;
     }
     if (liked && likes.total * 1 === 2) {
-      return `Você e ${likeUsers.first}`;
+      return `You and ${whoElseLiked.first}`;
     }
     if (liked && likes.total * 1 > 2) {
-      return `Você, ${likeUsers.first} e ${likes.total * 1 - 2} pessoas.}`;
+      return `You, ${whoElseLiked.first} and other ${
+        likes.total * 1 - 2
+      } people.`;
     }
     if (!liked && likes.total * 1 === 1) {
-      return `${likeUsers.first} curtiu este post`;
+      return `${whoElseLiked.first} liked this post`;
     }
     if (!liked && likes.total * 1 === 2) {
-      return `${likeUsers.first} e ${likeUsers.second}`;
+      return `${whoElseLiked.first} and ${whoElseLiked.second}`;
     }
     if (!liked && likes.total * 1 > 2) {
-      return `${likeUsers.first}, ${likeUsers.second} e ${
+      return `${whoElseLiked.first}, ${whoElseLiked.second} and other ${
         likes.total * 1 - 2
-      } pessoas.}`;
+      } people.`;
     }
+    return "Like!";
+  }
+
+  function getTotalLikes() {
+    return likes.total * 1;
   }
 
   return (
@@ -104,7 +130,7 @@ export default function LikeButton({ userId = 6, postId = 1 }) {
             setTimeout(() => setShowTooltip(true), 50);
           }}
         >
-          {(likes.total * 1) | []}
+          {getTotalLikes()}
         </p>
       </>
     </StyledLikeButton>
