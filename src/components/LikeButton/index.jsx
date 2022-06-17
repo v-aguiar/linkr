@@ -3,6 +3,7 @@ import ReactTooltip from "react-tooltip";
 
 import api from "../../services/api";
 
+import { handlePostLike } from "./utils/handlePostLike";
 import { StyledLikeButton, HeartFill, HeartLine } from "./style";
 
 export default function LikeButton({ userId = 6, postId = 4 }) {
@@ -19,51 +20,54 @@ export default function LikeButton({ userId = 6, postId = 4 }) {
 
   useEffect(() => {
     const fetchLikes = async () => {
-      const totalLikes = await api.get(`likes/${postId}/`);
-      const likesCount = totalLikes.data?.likes;
+      try {
+        const totalLikes = await api.get(`likes/${postId}/`);
+        const likesCount = totalLikes.data?.likes;
 
-      setLikes({ ...likes, total: likesCount });
+        setLikes({ ...likes, total: likesCount });
+      } catch (err) {
+        console.error("⚠ Error fetching total likes: ", err);
+      }
     };
 
-    fetchLikes().catch((err) => {
-      console.error("⚠ Error fetching total likes: ", err);
-      return;
-    });
+    fetchLikes();
   }, []); // eslint-disable-line
 
   useEffect(() => {
     const fetchUserLike = async () => {
-      const userLike = await api.get(`likes/${postId}/?userId=${userId}`);
-      setLikes({ ...likes, user: userLike.data.likes * 1 });
-      if (userLike.data.likes * 1 === 1) {
-        setLiked(true);
-        setLikes({ ...likes, total: likes.total * 1 + 1 });
-        return;
+      try {
+        const userLike = await api.get(`likes/${postId}/?userId=${userId}`);
+        setLikes({ ...likes, user: userLike.data.likes * 1 });
+        if (userLike.data.likes * 1 === 1) {
+          setLiked(true);
+          setLikes({ ...likes, total: likes.total * 1 + 1 });
+          return;
+        }
+      } catch (err) {
+        console.error("⚠ Error fetching user like: ", err);
       }
     };
 
-    fetchUserLike().catch((err) => {
-      console.error("⚠ Error fetching user like: ", err);
-      return;
-    });
+    fetchUserLike();
   }, []); // eslint-disable-line
 
   useEffect(() => {
     const fetchWhoElseLiked = async () => {
-      const whoElseLikedResponse = await api.get(
-        `likes/who/${postId}/${userId}`
-      );
+      try {
+        const whoElseLikedResponse = await api.get(
+          `likes/who/${postId}/${userId}`
+        );
 
-      setWhoElseLiked({
-        first: whoElseLikedResponse.data[0]?.username,
-        second: whoElseLikedResponse.data[1]?.username,
-      });
+        setWhoElseLiked({
+          first: whoElseLikedResponse.data[0]?.username,
+          second: whoElseLikedResponse.data[1]?.username,
+        });
+      } catch (err) {
+        console.error("⚠ Error fetching who else liked: ", err);
+      }
     };
 
-    fetchWhoElseLiked().catch((err) => {
-      console.error("⚠ Error fetching who else liked: ", err);
-      return;
-    });
+    fetchWhoElseLiked();
   }, []); // eslint-disable-line
 
   function handleClick() {
@@ -71,6 +75,9 @@ export default function LikeButton({ userId = 6, postId = 4 }) {
     liked
       ? setLikes({ ...likes, total: likes.total * 1 - 1 })
       : setLikes({ ...likes, total: likes.total * 1 + 1 });
+    liked
+      ? handlePostLike(false, postId, userId)
+      : handlePostLike(true, postId, userId);
   }
 
   function likeDataTip() {
