@@ -8,6 +8,8 @@ import GlobalStyles from "../../assets/styles/globalStyles";
 import RegisterPage from "../../pages/RegisterPage";
 import LoginPage from "../../pages/LoginPage";
 import TimelinePage from "../../pages/TimelinePage";
+import HashtagPage from "../../pages/HashtagPage";
+import UserPage from "../../pages/UserPage";
 
 function App() {
   const [userInfo, setUserInfo] = useState(
@@ -23,6 +25,8 @@ function App() {
           <Route path="/sign-up" element={<RegisterPage />} />
           <Route path="/" element={<LoginPage />} />
           <Route path="/timeline" element={<TimelinePage />} />
+          <Route path="/hashtag/:hashtag" element={<HashtagPage />} />
+          <Route path="/user/:userId" element={<UserPage />} />
         </Routes>
       </Router>
     </UserContext.Provider>

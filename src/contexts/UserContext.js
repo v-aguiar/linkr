@@ -1,5 +1,21 @@
-﻿import { createContext } from "react";
+﻿import react, {createContext } from "react";
 
-const UserContext = createContext();
+const context = createContext();
 
-export default UserContext;
+export function Provider(props) {
+  // TODO: remove apiUrl from here. Use the function 'api' instead.
+  const apiUrl = "http://localhost:4001";
+  const [refresh, setRefresh] = react.useState(false);
+  
+  return (
+    <context.Provider
+      value={{
+        apiUrl,
+        refresh, setRefresh
+      }}
+    >
+      {props.children}
+    </context.Provider>
+  );
+}
+export const getContext = () => react.useContext(context);
