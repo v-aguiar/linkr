@@ -12,9 +12,13 @@
     "react-debounce-input": "^3.3.0",
     "react-dom": "^18.1.0",
     "react-icons": "^4.4.0",
+<<<<<<< HEAD
     "react-loader-spinner": "^5.1.5",
+=======
+>>>>>>> 2721947 (feat: Add LikeButton component. It toogles between filled and outlined onClick)
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
+    "react-tooltip": "^4.2.21",
     "styled-components": "^5.3.5",
     "web-vitals": "^2.1.4"
   },
