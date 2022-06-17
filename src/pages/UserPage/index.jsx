@@ -1,16 +1,15 @@
 import styled from "styled-components";
 import { useEffect, useState } from "react";
-import axios from "axios";
+
 import { ThreeDots } from "react-loader-spinner";
 import { useParams } from "react-router-dom";
 
-import { getContext } from "../../contexts/UserContext";
 import MainScreen from "../../components/MainScreen";
 import UserPost from "../../components/Posts/UserPost";
 import TrendingBox from "../../components/TrendingBox";
+import api from "../../services/api";
 
 export default function UserPage() {
-    const { apiUrl } = getContext();
     const [userPosts, setUserPosts] = useState(null);
     const [loading, setLoading] = useState(true);
     const { userId } = useParams();
@@ -37,15 +36,14 @@ export default function UserPage() {
         );
     }
 
-    useEffect(() => {
-        axios
-            .get(`${apiUrl}/user/${userId}`)
+    useEffect((userId) => {
+        api.get(`user/${userId}`)
             .then((res) => {
                 setLoading(false);
                 setUserPosts(res.data);
             })
             .catch(errorGetPosts);
-    }, [apiUrl]);
+    }, []);
 
     return (
         <MainScreen>
