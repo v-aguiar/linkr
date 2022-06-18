@@ -5,6 +5,7 @@ import { IoIosArrowDown } from "react-icons/io";
 import { IconContext } from "react-icons";
 
 import { HeaderMenu, Img, Logout, Box } from "./style";
+import SearchInput from "../SearchInput";
 
 export default function Header() {
   const { userInfo } = useContext(UserContext);
@@ -29,6 +30,7 @@ export default function Header() {
     <>
       <HeaderMenu toggle={logoutMenu}>
         <h2>linkr</h2>
+        <SearchInput />
         <IconContext.Provider value={{ color: "white", size: 30 }}>
           <div onClick={toggleMenu}>
             <IoIosArrowDown />
