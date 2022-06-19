@@ -28,7 +28,7 @@ export default function TrendingBox() {
 			<div />
 			<Article>
 				{hashtagList.map((str, index) =>
-					   <p onClick={() => navigate(`hashtag/${str}`)}># {str}</p>
+					   <p key={index} onClick={() => navigate(`hashtag/${str}`)}># {str}</p>
 				)}
 			</Article>
 		</Box>
@@ -36,36 +36,32 @@ export default function TrendingBox() {
 };
 
 const Box = styled.div`
-	width: 15rem;
-	min-width: 15rem;
-	height: 10rem;
-  border-radius: 16px;
-  background-color: var(--color-5);
-  position: relative;
-  h1{
+	width: 37%;
+	height: auto;
+	margin-top: 3.4rem;
+	margin-left: 3rem;
+	border-radius: 16px;
+	background-color: var(--color-5);
+  &>h1{
 	font-family: var(--font-header);
-	font-size: 27px;
-	position:absolute;
-	top:12px;
-	left:16px;
+	font-size: 1.5rem;
+	margin-top:1rem;
+	margin-left:1rem;
   }
-  div{
+  &>div{
 		display: flex;
 		width: 100%;
 		border: 1px solid var(--color-6);
-		position: absolute;
-		top: 61px;
+		margin-top:1rem;
   }
 `;
 
 const Article = styled.article`
-	position: absolute;
-	height: 293px;
-	top: 83px;
-	left: 16px;
+	margin-top: 0.7rem;
+	margin-left:1rem;
 	
-	p{
-		margin-bottom: 10px;
+	&>p{
+		margin-bottom: 0.5rem;
 		font-weight: var(--font-weight-bold);
 	}
 `;

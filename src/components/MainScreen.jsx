@@ -7,7 +7,7 @@ import UserPost from "./Posts/UserPost";
 import TrendingBox from "./TrendingBox";
 import Header from "./Header";
 
-export default function MainScreen({refresh, route, children}) {
+export default function MainScreen({route, children}) {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -20,7 +20,7 @@ export default function MainScreen({refresh, route, children}) {
           return <h2>There are no posts yet</h2>
         }
     
-        return posts.map((post, id) => <UserPost key={id} postData={post} /> );
+        return posts.map((post, index) => <UserPost key={index} postData={post} /> );
       }
 
       function errorGetPosts(e) {
@@ -36,8 +36,8 @@ export default function MainScreen({refresh, route, children}) {
             setLoading(false);
             setPosts(res.data);
           })
-                .catch(errorGetPosts);
-      },[refresh]);
+            .catch(errorGetPosts);
+      });
     
       return(
         <MainScreenContainer>

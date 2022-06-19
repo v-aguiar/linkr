@@ -1,6 +1,12 @@
+import { useParams } from "react-router-dom";
+import MainScreen from "../../components/MainScreen";
 
-function HashtagPage(){
+export default function HashtagPage(){
+    const { hashtag } = useParams();
 
-};
-
-export default HashtagPage;
+    return (
+        <MainScreen route={`hashtag/${hashtag}`} >
+            <h1># {hashtag}</h1>
+        </MainScreen>
+    )
+}
