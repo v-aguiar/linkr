@@ -17,7 +17,7 @@ export const MainScreenContainer = styled.section`
   & > main {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: center;
     align-items: flex-start;
     width: 100%;
     height: 100%;
@@ -28,7 +28,6 @@ export const Section = styled.section`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: center;
   width: 70%;
   & > h1 {
     width: 100%;

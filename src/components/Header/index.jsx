@@ -12,8 +12,6 @@ export default function Header() {
   const [logoutMenu, setLogoutMenu] = useState(false);
   const navigate = useNavigate();
 
-  console.log("userInfo", userInfo);
-
   function toggleMenu() {
     setLogoutMenu(!logoutMenu);
   }
