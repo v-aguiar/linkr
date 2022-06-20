@@ -1,11 +1,13 @@
 ﻿import { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-import UserContext from "../../contexts/UserContext";
+import { ThreeDots } from "react-loader-spinner";
 
+import UserContext from "../../contexts/UserContext";
 import MainScreen from "../../components/MainScreen";
 import api from "../../services/api";
-import { ThreeDots } from "react-loader-spinner";
+
+import { Div, StyledUserSpan } from "./style";
 
 export default function UserPage() {
   const [userData, setUserData] = useState({});
@@ -37,13 +39,14 @@ export default function UserPage() {
   return (
     <MainScreen>
       {userData ? (
-        <span>
+        <StyledUserSpan>
           <img src={userData.imgUrl} alt="User profile pic" />
           <h1> {userData.username}</h1>
-        </span>
+        </StyledUserSpan>
       ) : (
         <ThreeDots />
       )}
+      <Div>POSTS ↔ ⚠ Em desenvolvimento...</Div>
     </MainScreen>
   );
 }
