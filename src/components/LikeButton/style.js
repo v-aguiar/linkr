@@ -13,6 +13,10 @@ export const StyledLikeButton = styled.button`
     font-family: "Lato", sans-serif !important;
     font-weight: 700 !important;
     font-size: 0.685rem !important;
+
+    span {
+      background-color: #fff !important;
+    }
   }
 
   p {
