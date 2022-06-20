@@ -41,7 +41,7 @@ export default function UserPage() {
       {userData ? (
         <StyledUserSpan>
           <img src={userData.imgUrl} alt="User profile pic" />
-          <h1> {userData.username}</h1>
+          <h1> {userData.username}'s posts</h1>
         </StyledUserSpan>
       ) : (
         <ThreeDots />
