@@ -34,6 +34,9 @@ export const StyledSearchInput = styled(DebounceInput)`
   font-size: 1.063rem;
   line-height: 1.275rem;
 
+  position: relative;
+  z-index: 1;
+
   &::placeholder {
     color: #949494;
   }
@@ -51,7 +54,7 @@ export const SearchButton = styled(FaSearch)`
 
   transition: all 0.3s ease-in-out;
 
-  &::hover {
+  &:hover {
     color: #515151;
     cursor: pointer;
   }
@@ -61,7 +64,6 @@ export const StyledSearchList = styled.ul`
   height: fit-content;
   width: ${(props) => props.width};
 
-  background-color: #fff;
   color: #515151;
 
   font-family: "Lato", sans-serif;
@@ -70,9 +72,9 @@ export const StyledSearchList = styled.ul`
   line-height: 1.275rem;
 
   position: absolute;
-  top: 2.8125rem;
+  top: 2.5rem;
   left: 0;
-  z-index: 1;
+  z-index: 0;
 
   li {
     width: ${(props) => props.width};
@@ -82,16 +84,27 @@ export const StyledSearchList = styled.ul`
     align-items: center;
     gap: 1rem;
 
+    background-color: #e7e7e7;
+    transition: all 0.3s ease-in-out;
+
     img {
       width: 2.438rem;
 
       border-radius: 50%;
     }
 
+    &:first-child {
+      min-height: 3.125rem;
+    }
+
     &:last-child {
       border-bottom-left-radius: 0.5rem;
       border-bottom-right-radius: 0.5rem;
     }
-  }
 
+    &:hover {
+      cursor: pointer;
+      filter: brightness(0.9);
+    }
+  }
 `;
