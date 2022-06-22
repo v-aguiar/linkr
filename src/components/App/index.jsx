@@ -9,6 +9,7 @@ import RegisterPage from "../../pages/RegisterPage";
 import LoginPage from "../../pages/LoginPage";
 import TimelinePage from "../../pages/TimelinePage";
 import UserPage from "../../pages/UserPage";
+import HashtagPage from "../../pages/HashtagPage";
 
 function App() {
   const [userInfo, setUserInfo] = useState(
@@ -25,6 +26,7 @@ function App() {
           <Route path="/" element={<LoginPage />} />
           <Route path="/timeline" element={<TimelinePage />} />
           <Route path="/user/:id" element={<UserPage />} />
+          <Route path="/hashtag/:hashtag" element={<HashtagPage />} />
         </Routes>
       </Router>
     </UserContext.Provider>
