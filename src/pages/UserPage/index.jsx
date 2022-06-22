@@ -8,6 +8,7 @@ import MainScreen from "../../components/MainScreen";
 import api from "../../services/api";
 
 import { Div, StyledUserSpan } from "./style";
+import FollowButton from "../../components/FollowButton";
 
 export default function UserPage() {
   const [userData, setUserData] = useState({});
@@ -42,6 +43,7 @@ export default function UserPage() {
         <StyledUserSpan>
           <img src={userData.imgUrl} alt="User profile pic" />
           <h1> {userData.username}'s posts</h1>
+          <FollowButton userId={userData.id} otherId={id} />
         </StyledUserSpan>
       ) : (
         <ThreeDots />
