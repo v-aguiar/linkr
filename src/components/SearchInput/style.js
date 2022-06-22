@@ -5,7 +5,7 @@ import styled from "styled-components";
 
 export const SearchInputWrapper = styled.div`
   height: 2.8125rem;
-  width: ${(props) => props.width};
+  max-width: ${(props) => props.width};
 
   margin: 0 0.625rem;
   border-radius: 0.5rem;

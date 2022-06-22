@@ -3,12 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import api from "../../services/api";
 
-import {
-  SearchButton,
-  SearchInputWrapper,
-  StyledSearchInput,
-  StyledSearchList,
-} from "./style";
+import { SearchButton, SearchInputWrapper, StyledSearchInput, StyledSearchList } from "./style";
 
 export default function SearchInput({ width = "100%" }) {
   const [inputValue, setInputValue] = useState("");
@@ -38,9 +33,8 @@ export default function SearchInput({ width = "100%" }) {
   };
 
   return (
-    <SearchInputWrapper>
+    <SearchInputWrapper width={width}>
       <StyledSearchInput
-        width={width}
         value={inputValue}
         onChange={handleChange}
         placeholder="Search for people"
@@ -53,9 +47,7 @@ export default function SearchInput({ width = "100%" }) {
           users.map((user) => {
             return (
               <li onClick={() => navigateToUserPage(user.id)} key={user.id}>
-                {user.imgUrl && (
-                  <img src={user.imgUrl} alt="User profile pic" />
-                )}
+                {user.imgUrl && <img src={user.imgUrl} alt="User profile pic" />}
                 <span>{user.username}</span>
               </li>
             );
