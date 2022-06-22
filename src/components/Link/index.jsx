@@ -1,12 +1,12 @@
 import { LinkPreviewContainer } from "./style";
 
-export default function LinkPreview({metaData}) {
-    const { username, text, imgUrl, url} = metaData
+export default function LinkPreview({ metaData }) {
+    const { username, text, imgUrl, url } = metaData;
     return (
         <LinkPreviewContainer>
             <a href={url} target="_blank" rel="noopener">
                 <section>
-                    <p>{text}</p>
+                    <h1>{text}</h1>
                     <small>{text}</small>
                     <p className="link">{url}</p>
                 </section>
