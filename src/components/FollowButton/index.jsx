@@ -6,14 +6,12 @@ import { StyledFollowButton } from "./style";
 import UserContext from "../../contexts/UserContext";
 import api from "../../services/api";
 
-export default function FollowButton({ userId = 6, otherId = 11 }) {
+export default function FollowButton({ friendId = 11 }) {
   const [isButtonReady, setIsButtonReady] = useState(false);
   const [disableButton, setDisableButton] = useState(false);
+  const [controlFetch, setControlFetch] = useState(false);
   const [followed, setFollowed] = useState(false);
-  const [friendsData, setFriendsData] = useState({
-    friends: [],
-    count: 0,
-  });
+  const [friendsData, setFriendsData] = useState({});
 
   const { userInfo } = useContext(UserContext);
 
@@ -25,48 +23,54 @@ export default function FollowButton({ userId = 6, otherId = 11 }) {
 
   useEffect(() => {
     const fetchFriends = async () => {
-      const friends = await api.get(`/friends/${otherId}`, config);
+      const friends = await api.get(`/friends/${friendId}`, config);
 
       setFriendsData(friends.data);
       setIsButtonReady(true);
-
-      if (friends.data?.friends?.length > 0) {
-        setFollowed(true);
-      }
     };
 
     fetchFriends();
-  }, []); // eslint-disable-line
+  }, [controlFetch]); // eslint-disable-line
 
   useEffect(() => {
-    const alreadyFriend = friendsData?.friends.find(
-      (friend) => friend.id === userId
+    const alreadyFriends = friendsData?.friends;
+    const findFriend = alreadyFriends?.find(
+      (friend) => friend.id === friendsData.userId
     );
-    if (alreadyFriend) {
-      setFollowed(true);
-    }
 
-    setFollowed(false);
-    setIsButtonReady(true);
-  }, [friendsData]); // eslint-disable-line
+    if (findFriend) {
+      setFollowed(true);
+    } else {
+      setFollowed(false);
+    }
+  }, [isButtonReady]); // eslint-disable-line
 
   async function handleFollow() {
     const body = {
-      userId: userId,
-      friendId: otherId,
+      userId: friendsData?.userId,
+      friendId: friendId,
     };
 
     if (followed) {
       setDisableButton(true);
+
+      config.data = body;
+
       api
-        .post(`/friends/unfollow`, body, config)
+        .delete(`/friends/unfollow`, config)
         .then(() => {
           setFollowed(false);
           setDisableButton(false);
+          setControlFetch(!controlFetch);
+
+          delete config.data;
         })
         .catch((err) => {
-          console.error("⚠ Error unfollowing user", err);
+          console.error("⚠ Error unfollowing user", err.response.data);
+          alert("⚠ Error unfollowing user");
           setDisableButton(false);
+
+          delete config.data;
         });
     } else {
       setDisableButton(true);
@@ -75,9 +79,11 @@ export default function FollowButton({ userId = 6, otherId = 11 }) {
         .then(() => {
           setFollowed(true);
           setDisableButton(false);
+          setControlFetch(!controlFetch);
         })
         .catch((err) => {
           console.error("⚠ Error following user", err);
+          alert("⚠ Error following user");
           setDisableButton(false);
         });
     }
@@ -85,7 +91,7 @@ export default function FollowButton({ userId = 6, otherId = 11 }) {
 
   return (
     <StyledFollowButton
-      onClick={() => (disableButton ? {} : handleFollow())}
+      onClick={disableButton ? {} : () => handleFollow()}
       followed={followed}
       disabled={disableButton}
       type="button"

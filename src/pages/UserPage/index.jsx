@@ -41,9 +41,11 @@ export default function UserPage() {
     <MainScreen>
       {userData ? (
         <StyledUserSpan>
-          <img src={userData.imgUrl} alt="User profile pic" />
-          <h1> {userData.username}'s posts</h1>
-          <FollowButton userId={userData.id} otherId={id} />
+          <span>
+            <img src={userData.imgUrl} alt="User profile pic" />
+            <h1> {userData.username}'s posts</h1>
+          </span>
+          <FollowButton otherId={id} />
         </StyledUserSpan>
       ) : (
         <ThreeDots />
