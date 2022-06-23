@@ -17,6 +17,7 @@ export const PostContainer = styled.article`
         flex-direction: column;
         width: 4rem;
         padding-right: 1rem;
+        align-items: center;
 
         img {
             --size-icon: 2.5rem;
@@ -100,7 +101,7 @@ export const PostWrite = styled.div`
     }
 `;
 
-export const WriteContent = styled.div`
+export const WriteContent = styled.form`
     display: flex;
     flex-direction: column;
     gap: 5px;
@@ -148,17 +149,18 @@ export const WriteContent = styled.div`
     }
 
     button {
-        background: #1877f2;
+        background: ${(props) => (props.submited ? "#81b3ef" : "#1877f2")};
         border-radius: 5px;
         width: 112px;
         height: 22px;
         border: none;
         color: #fff;
-        cursor: pointer;
+        cursor: ${(props) => (props.submited ? "default" : "pointer")};
         transition: 0.5s;
 
         :hover {
-            background-color: #1e62b5;
+            background-color: ${(props) =>
+                props.submited ? "#81b3ef" : "#1e62b5"};
         }
     }
 

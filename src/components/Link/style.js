@@ -80,5 +80,9 @@ export const LinkPreviewContainer = styled.article`
                 background-repeat: no-repeat;
             }
         }
+
+        & > section:first-child {
+            overflow-x: inherit;
+        }
     }
 `;

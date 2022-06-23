@@ -10,6 +10,8 @@ export default function TimelinePage() {
     const [posts, setPosts] = useState([]);
     const [userId, setUserId] = useState(null);
     const { userInfo } = useContext(UserContext);
+    const [writePost, setWritePost] = useState({ text: "", url: "" });
+    const [submited, setSubmited] = useState(false);
 
     const config = {
         headers: {
@@ -37,6 +39,37 @@ export default function TimelinePage() {
         }
     }
 
+    function handleInput(e) {
+        writePost[e.target.name] = e.target.value;
+        setWritePost({ ...writePost });
+    }
+
+    function handleSubmit(e) {
+        e.preventDefault();
+        setSubmited(true);
+
+        const regex =
+            /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
+
+        if (!writePost.url || !regex.test(writePost.url)) {
+            setSubmited(false);
+            return alert("preencha corretamente o campo de url");
+        }
+
+        const promisse = api.post("posts", writePost, config);
+
+        promisse
+            .then(() => {
+                setSubmited(false);
+                setWritePost({ text: "", url: "" });
+            })
+            .catch(() => {
+                setSubmited(false);
+                alert("Houve um erro ao publicar seu link");
+                return;
+            });
+    }
+
     useEffect(() => {
         getPosts();
         getUserId();
@@ -49,12 +82,28 @@ export default function TimelinePage() {
                 <section>
                     <img className="user" src={userInfo.img} alt="" />
                 </section>
-                <WriteContent>
+                <WriteContent onSubmit={handleSubmit} submited={submited}>
                     <p>What are you going to share today?</p>
-                    <input type="url" name="" placeholder="http://..." />
-                    <textarea placeholder="Awesome article about #javascript"></textarea>
+                    <input
+                        disabled={submited}
+                        required
+                        value={writePost.url}
+                        onChange={handleInput}
+                        type="url"
+                        name="url"
+                        placeholder="http://..."
+                    />
+                    <textarea
+                        disabled={submited}
+                        value={writePost.text}
+                        onChange={handleInput}
+                        placeholder="Awesome article about #javascript"
+                        name="text"
+                    ></textarea>
                     <div>
-                        <button>Publish</button>
+                        <button type="submit" disabled={submited}>
+                            Publish
+                        </button>
                     </div>
                 </WriteContent>
             </PostWrite>
@@ -64,7 +113,11 @@ export default function TimelinePage() {
                     <PostContainer key={index}>
                         <section>
                             <img className="user" src={userImg} alt="" />
-                            <LikeButton userId={userId} postId={id} />
+                            {userId ? (
+                                <LikeButton userId={userId} postId={id} />
+                            ) : (
+                                <></>
+                            )}
                         </section>
                         <div className="post-body">
                             <h2>{username}</h2>
