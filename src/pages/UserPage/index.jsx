@@ -45,7 +45,7 @@ export default function UserPage() {
             <img src={userData.imgUrl} alt="User profile pic" />
             <h1> {userData.username}'s posts</h1>
           </span>
-          <FollowButton otherId={id} />
+          {userData.id * 1 === id * 1 ? <></> : <FollowButton friendId={id} />}
         </StyledUserSpan>
       ) : (
         <ThreeDots />

@@ -7,6 +7,7 @@ export const StyledUserSpan = styled.span`
   justify-content: space-between;
 
   margin-top: 3.3125rem;
+  width: 100%;
 
   > span {
     display: flex;
