@@ -4,22 +4,29 @@ export const StyledUserSpan = styled.span`
   display: flex;
   align-items: center;
   align-self: flex-start;
+  justify-content: space-between;
 
   margin-top: 3.3125rem;
+  width: 100%;
 
-  > h1 {
-    font-family: "Oswald", sans-serif;
-    font-weight: 700;
-    font-size: 2.6875rem;
-    color: #fff;
+  > span {
+    display: flex;
+    align-items: center;
 
-    margin-left: 1.125rem;
-  }
+    > h1 {
+      font-family: "Oswald", sans-serif;
+      font-weight: 700;
+      font-size: 2.6875rem;
+      color: #fff;
 
-  > img {
-    border-radius: 50%;
-    height: 3.125rem;
-    width: 3.125rem;
+      margin: 0 1.125rem;
+    }
+
+    > img {
+      border-radius: 50%;
+      height: 3.125rem;
+      width: 3.125rem;
+    }
   }
 `;
 
