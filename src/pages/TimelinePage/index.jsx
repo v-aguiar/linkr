@@ -1,30 +1,45 @@
-import { useState } from "react";
-import { useContext } from "react";
-import { useEffect } from "react";
+import { useState, useContext, useEffect } from "react";
 import LinkPreview from "../../components/Link";
 import MainScreen from "../../components/MainScreen/";
 import UserContext from "../../contexts/UserContext";
 import api from "../../services/api";
 import { PostContainer, Title, PostWrite, WriteContent } from "./style";
+import LikeButton from "../../components/LikeButton";
 
 export default function TimelinePage() {
     const [posts, setPosts] = useState([]);
+    const [userId, setUserId] = useState(null);
     const { userInfo } = useContext(UserContext);
 
-    useEffect(() => {
-        const config = {
-            headers: {
-                Authorization: `Bearer ${userInfo.token}`,
-            },
-        };
-        const promisse = api.get("timeline", config);
-        promisse.then((res) => {
-            const { data } = res;
+    const config = {
+        headers: {
+            Authorization: `Bearer ${userInfo.token}`,
+        },
+    };
+
+    async function getPosts() {
+        try {
+            const obj = await api.get("posts", config);
+            const { data } = obj;
             setPosts(data);
-        });
-        promisse.catch((error) => {
+        } catch (error) {
             alert(error.response.data);
-        });
+        }
+    }
+
+    async function getUserId() {
+        try {
+            const obj = await api.get("userId", config);
+            const { data } = obj;
+            setUserId(data.userId);
+        } catch (error) {
+            alert(error.response.data);
+        }
+    }
+
+    useEffect(() => {
+        getPosts();
+        getUserId();
     }, []);
 
     return (
@@ -43,22 +58,20 @@ export default function TimelinePage() {
                     </div>
                 </WriteContent>
             </PostWrite>
-            {posts.map((post) => {
-                const { username, text, imgUrl, url } = post;
+            {posts.map((post, index) => {
+                const { username, text, userImg, id } = post;
                 return (
-                    <>
-                        <PostContainer>
-                            <section>
-                                <img className="user" src={imgUrl} alt="" />
-                                {/* {handleLikes()} */}
-                            </section>
-                            <div className="post-body">
-                                <h2>{username}</h2>
-                                <p>{text}</p>
-                                <LinkPreview metaData={post} />
-                            </div>
-                        </PostContainer>
-                    </>
+                    <PostContainer key={index}>
+                        <section>
+                            <img className="user" src={userImg} alt="" />
+                            <LikeButton userId={userId} postId={id} />
+                        </section>
+                        <div className="post-body">
+                            <h2>{username}</h2>
+                            <p>{text}</p>
+                            <LinkPreview metaData={post} />
+                        </div>
+                    </PostContainer>
                 );
             })}
         </MainScreen>
