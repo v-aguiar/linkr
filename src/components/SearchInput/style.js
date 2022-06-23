@@ -5,7 +5,7 @@ import styled from "styled-components";
 
 export const SearchInputWrapper = styled.div`
   height: 2.8125rem;
-  max-width: ${(props) => props.width};
+  width: 35.1875rem;
 
   margin: 0 0.625rem;
   border-radius: 0.5rem;
@@ -62,7 +62,7 @@ export const SearchButton = styled(FaSearch)`
 
 export const StyledSearchList = styled.ul`
   height: fit-content;
-  width: ${(props) => props.width};
+  width: 100%;
 
   color: #515151;
 
@@ -77,7 +77,7 @@ export const StyledSearchList = styled.ul`
   z-index: 0;
 
   li {
-    width: ${(props) => props.width};
+    width: 100%;
     padding: 0.625rem 2.25rem 0.625rem 1rem;
 
     display: flex;
@@ -91,6 +91,18 @@ export const StyledSearchList = styled.ul`
       width: 2.438rem;
 
       border-radius: 50%;
+    }
+
+    > span {
+      display: flex;
+      align-items: center;
+
+      .followingText {
+        margin-left: 1rem;
+
+        color: #949494;
+        white-space: nowrap;
+      }
     }
 
     &:first-child {

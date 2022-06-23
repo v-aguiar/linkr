@@ -11,6 +11,7 @@ import { Div, StyledUserSpan } from "./style";
 import FollowButton from "../../components/FollowButton";
 
 export default function UserPage() {
+  const [userPageData, setUserPageData] = useState({});
   const [userData, setUserData] = useState({});
   const { id } = useParams();
 
@@ -18,8 +19,12 @@ export default function UserPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchUserData();
+    fetchUserPageData();
   }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    fetchUserData();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!userInfo.token) {
     alert("!⚠ Session expired. Please login again.");
@@ -27,11 +32,27 @@ export default function UserPage() {
     return;
   }
 
-  async function fetchUserData() {
+  async function fetchUserPageData() {
     try {
       const response = await api.get(`/user/searchId/${id}`);
 
-      setUserData(response.data);
+      setUserPageData(response.data);
+    } catch (err) {
+      console.error("⚠ Error fetching user page data", err);
+    }
+  }
+
+  async function fetchUserData() {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    try {
+      const user = await api.get(`/user/session`, config);
+
+      setUserData(user.data);
     } catch (err) {
       console.error("⚠ Error fetching user data", err);
     }
@@ -39,13 +60,17 @@ export default function UserPage() {
 
   return (
     <MainScreen>
-      {userData ? (
+      {userPageData ? (
         <StyledUserSpan>
           <span>
-            <img src={userData.imgUrl} alt="User profile pic" />
-            <h1> {userData.username}'s posts</h1>
+            <img src={userPageData.imgUrl} alt="User profile pic" />
+            <h1> {userPageData.username}'s posts</h1>
           </span>
-          {userData.id * 1 === id * 1 ? <></> : <FollowButton friendId={id} />}
+          {userData.userId * 1 === id * 1 ? (
+            <></>
+          ) : (
+            <FollowButton friendId={id} />
+          )}
         </StyledUserSpan>
       ) : (
         <ThreeDots />
