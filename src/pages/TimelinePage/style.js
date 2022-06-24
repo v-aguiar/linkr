@@ -56,6 +56,11 @@ export const PostContainer = styled.article`
             color: #b7b7b7;
             margin-bottom: 0.8rem;
         }
+
+        span {
+            color: #fff;
+            font-weight: 700;
+        }
     }
 `;
 
