@@ -17,6 +17,7 @@ export const StyledFollowButton = styled.button`
 
   display: flex;
   align-items: center;
+  justify-self: flex-end;
   justify-content: center;
 
   padding: 0.4375rem 2.1875rem;
