@@ -6,8 +6,15 @@ export const MainScreenContainer = styled.section`
     justify-content: center;
     align-items: flex-start;
     width: 100%;
+    max-width: 611px;
     height: 100vh;
     padding-top: 4.5rem;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    ::-webkit-scrollbar {
+        display: none;
+    }
 
     background-color: #333333;
 
@@ -29,8 +36,8 @@ export const Section = styled.section`
     flex-direction: column;
     gap: 1rem;
     justify-content: flex-start;
-    width: 70%;
-    max-width: 611px;
+    width: 100%;
+
     @media (max-width: 500px) {
         width: 100%;
     }

@@ -1,10 +1,13 @@
 import { useState, useContext, useEffect } from "react";
-import LinkPreview from "../../components/Link";
 import MainScreen from "../../components/MainScreen/";
+import Post from "../../components/Post";
+import Trending from "../../components/Trending";
+
 import UserContext from "../../contexts/UserContext";
 import api from "../../services/api";
-import { PostContainer, Title, PostWrite, WriteContent } from "./style";
-import LikeButton from "../../components/LikeButton";
+
+import { Title, PostWrite, WriteContent } from "./style";
+import { Container } from "../HashtagPage/style";
 
 export default function TimelinePage() {
     const [posts, setPosts] = useState([]);
@@ -76,57 +79,43 @@ export default function TimelinePage() {
     }, []);
 
     return (
-        <MainScreen>
-            <Title>timeline</Title>
-            <PostWrite>
-                <section>
-                    <img className="user" src={userInfo.img} alt="" />
-                </section>
-                <WriteContent onSubmit={handleSubmit} submited={submited}>
-                    <p>What are you going to share today?</p>
-                    <input
-                        disabled={submited}
-                        required
-                        value={writePost.url}
-                        onChange={handleInput}
-                        type="url"
-                        name="url"
-                        placeholder="http://..."
-                    />
-                    <textarea
-                        disabled={submited}
-                        value={writePost.text}
-                        onChange={handleInput}
-                        placeholder="Awesome article about #javascript"
-                        name="text"
-                    ></textarea>
-                    <div>
-                        <button type="submit" disabled={submited}>
-                            Publish
-                        </button>
-                    </div>
-                </WriteContent>
-            </PostWrite>
-            {posts.map((post, index) => {
-                const { username, text, userImg, id } = post;
-                return (
-                    <PostContainer key={index}>
-                        <section>
-                            <img className="user" src={userImg} alt="" />
-                            {userId ? (
-                                <LikeButton userId={userId} postId={id} />
-                            ) : (
-                                <></>
-                            )}
-                        </section>
-                        <div className="post-body">
-                            <h2>{username}</h2>
-                            <p>{text}</p>
-                            <LinkPreview metaData={post} />
+        <Container>
+            <MainScreen>
+                <Title>timeline</Title>
+                <PostWrite>
+                    <section>
+                        <img className="user" src={userInfo.img} alt="" />
+                    </section>
+                    <WriteContent onSubmit={handleSubmit} submited={submited}>
+                        <p>What are you going to share today?</p>
+                        <input
+                            disabled={submited}
+                            required
+                            value={writePost.url}
+                            onChange={handleInput}
+                            type="url"
+                            name="url"
+                            placeholder="http://..."
+                        />
+                        <textarea
+                            disabled={submited}
+                            value={writePost.text}
+                            onChange={handleInput}
+                            placeholder="Awesome article about #javascript"
+                            name="text"
+                        ></textarea>
+                        <div>
+                            <button type="submit" disabled={submited}>
+                                Publish
+                            </button>
                         </div>
-                    </PostContainer>
-                );
-            })}
-        </MainScreen>
+                    </WriteContent>
+                </PostWrite>
+                {posts.map((post, index) => {
+                    return <Post info={post} key={index} userId={userId} />;
+                })}
+            </MainScreen>
+            <Trending />
+        </Container>
     );
 }
