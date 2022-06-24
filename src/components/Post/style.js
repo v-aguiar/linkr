@@ -60,6 +60,7 @@ export const PostContainer = styled.article`
         span {
             color: #fff;
             font-weight: 700;
+            cursor: pointer;
         }
     }
 `;
