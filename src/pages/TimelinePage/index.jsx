@@ -6,7 +6,7 @@ import Trending from "../../components/Trending";
 import UserContext from "../../contexts/UserContext";
 import api from "../../services/api";
 
-import { Title, PostWrite, WriteContent } from "./style";
+import { Title, PostWrite, WriteContent, EmptyPostText } from "./style";
 import { Container } from "../HashtagPage/style";
 
 export default function TimelinePage() {
@@ -15,6 +15,7 @@ export default function TimelinePage() {
     const { userInfo } = useContext(UserContext);
     const [writePost, setWritePost] = useState({ text: "", url: "" });
     const [submited, setSubmited] = useState(false);
+    const [friendsCount, setFriendsCount] = useState(0);
 
     const config = {
         headers: {
@@ -22,9 +23,9 @@ export default function TimelinePage() {
         },
     };
 
-    async function getPosts() {
+    async function getPosts(id) {
         try {
-            const obj = await api.get("posts", config);
+            const obj = await api.get(`posts/friends/${id}`, config);
             const { data } = obj;
             setPosts(data);
         } catch (error) {
@@ -33,10 +34,15 @@ export default function TimelinePage() {
     }
 
     async function getUserId() {
+        return await api.get("userId", config);
+    }
+
+    async function hasFriends(id) {
         try {
-            const obj = await api.get("userId", config);
-            const { data } = obj;
-            setUserId(data.userId);
+            const { data } = await api.get(`friends/${id}`, config);
+            const { count } = data;
+
+            setFriendsCount(count);
         } catch (error) {
             alert(error.response.data);
         }
@@ -73,9 +79,35 @@ export default function TimelinePage() {
             });
     }
 
+    function printOnEmptyPosts() {
+        const hasFriends = friendsCount > 0;
+        const hasNoFriendsPosts = posts.length === 0;
+
+        if (hasFriends && hasNoFriendsPosts) {
+            return (
+                <EmptyPostText>No posts found from your friends.</EmptyPostText>
+            );
+        }
+
+        if (!hasFriends) {
+            return (
+                <EmptyPostText>
+                    You don't follow anyone yet. Search for new friends!
+                </EmptyPostText>
+            );
+        }
+    }
+
     useEffect(() => {
-        getPosts();
-        getUserId();
+        getUserId()
+            .then(({ data }) => {
+                setUserId(data.userId);
+                hasFriends(data.userId);
+                getPosts(data.userId);
+            })
+            .catch((error) => {
+                alert(error.response.data);
+            });
     }, []);
 
     return (
@@ -111,9 +143,13 @@ export default function TimelinePage() {
                         </div>
                     </WriteContent>
                 </PostWrite>
-                {posts.map((post, index) => {
-                    return <Post info={post} key={index} userId={userId} />;
-                })}
+                {posts.length === 0
+                    ? printOnEmptyPosts()
+                    : posts.map((post, index) => {
+                          return (
+                              <Post info={post} key={index} userId={userId} />
+                          );
+                      })}
             </MainScreen>
             <Trending />
         </Container>

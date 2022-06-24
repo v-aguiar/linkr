@@ -11,71 +11,77 @@ import { Div, StyledUserSpan } from "./style";
 import FollowButton from "../../components/FollowButton";
 
 export default function UserPage() {
-  const [userPageData, setUserPageData] = useState({});
-  const [userData, setUserData] = useState({});
-  const { id } = useParams();
+    const [userPageData, setUserPageData] = useState({});
+    const [userData, setUserData] = useState({});
+    const { id } = useParams();
 
-  const { userInfo } = useContext(UserContext);
-  const navigate = useNavigate();
+    const { userInfo } = useContext(UserContext);
+    const navigate = useNavigate();
 
-  useEffect(() => {
-    fetchUserPageData();
-  }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
+    useEffect(() => {
+        fetchUserPageData();
+    }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  useEffect(() => {
-    fetchUserData();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    useEffect(() => {
+        fetchUserData();
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  if (!userInfo.token) {
-    alert("!⚠ Session expired. Please login again.");
-    navigate("/");
-    return;
-  }
-
-  async function fetchUserPageData() {
-    try {
-      const response = await api.get(`/user/searchId/${id}`);
-
-      setUserPageData(response.data);
-    } catch (err) {
-      console.error("⚠ Error fetching user page data", err);
+    if (!userInfo.token) {
+        alert("!⚠ Session expired. Please login again.");
+        navigate("/");
+        return;
     }
-  }
 
-  async function fetchUserData() {
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
+    async function fetchUserPageData() {
+        const config = {
+            headers: {
+                Authorization: `Bearer ${userInfo.token}`,
+            },
+        };
 
-    try {
-      const user = await api.get(`/user/session`, config);
+        try {
+            const response = await api.get(`/user/searchId/${id}`, config);
 
-      setUserData(user.data);
-    } catch (err) {
-      console.error("⚠ Error fetching user data", err);
+            setUserPageData(response.data);
+        } catch (err) {
+            console.error("⚠ Error fetching user page data", err);
+        }
     }
-  }
 
-  return (
-    <MainScreen>
-      {userPageData ? (
-        <StyledUserSpan>
-          <span>
-            <img src={userPageData.imgUrl} alt="User profile pic" />
-            <h1> {userPageData.username}'s posts</h1>
-          </span>
-          {userData.userId * 1 === id * 1 ? (
-            <></>
-          ) : (
-            <FollowButton friendId={id} />
-          )}
-        </StyledUserSpan>
-      ) : (
-        <ThreeDots />
-      )}
-      <Div>POSTS ↔ ⚠ Em desenvolvimento...</Div>
-    </MainScreen>
-  );
+    async function fetchUserData() {
+        const config = {
+            headers: {
+                Authorization: `Bearer ${userInfo.token}`,
+            },
+        };
+
+        try {
+            const user = await api.get(`/user/session`, config);
+
+            setUserData(user.data);
+        } catch (err) {
+            console.error("⚠ Error fetching user data", err);
+        }
+    }
+
+    return (
+        <MainScreen>
+            {userPageData ? (
+                <StyledUserSpan>
+                    <span>
+                        <img src={userPageData.imgUrl} alt="User profile pic" />
+                        <h1> {userPageData.username}'s posts</h1>
+                    </span>
+                    {userData.userId * 1 === id * 1 ? (
+                        <></>
+                    ) : (
+                        <FollowButton friendId={id} />
+                    )}
+                </StyledUserSpan>
+            ) : (
+                <ThreeDots />
+            )}
+            <Div>POSTS ↔ ⚠ Em desenvolvimento...</Div>
+        </MainScreen>
+    );
 }

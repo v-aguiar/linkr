@@ -5,133 +5,145 @@ import UserContext from "../../contexts/UserContext";
 import api from "../../services/api";
 
 import {
-  SearchButton,
-  SearchInputWrapper,
-  StyledSearchInput,
-  StyledSearchList,
+    SearchButton,
+    SearchInputWrapper,
+    StyledSearchInput,
+    StyledSearchList,
 } from "./style";
 
 export default function SearchInput({ width = "100%" }) {
-  const [inputValue, setInputValue] = useState("");
-  const [users, setUsers] = useState([]);
-  const [userData, setUserData] = useState({});
-  const [friendsData, setFriendsData] = useState({});
+    const [inputValue, setInputValue] = useState("");
+    const [users, setUsers] = useState([]);
+    const [disabled, setDisabled] = useState(true);
+    const [friendsData, setFriendsData] = useState({});
 
-  const { userInfo } = useContext(UserContext);
-  const navigate = useNavigate();
-  const location = useLocation();
+    const { userInfo } = useContext(UserContext);
+    const navigate = useNavigate();
+    const location = useLocation();
 
-  const config = {
-    headers: {
-      Authorization: `Bearer ${userInfo.token}`,
-    },
-  };
+    const config = {
+        headers: {
+            Authorization: `Bearer ${userInfo.token}`,
+        },
+    };
 
-  useEffect(() => {
-    fetchUserData();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    if (userData?.userId) {
-      fetchFriends();
-    }
-  }, [userData, location]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  async function fetchUserData() {
-    try {
-      const user = await api.get(`/user/session`, config);
-
-      setUserData(user.data);
-    } catch (err) {
-      console.error("⚠ Error fetching user data", err);
-    }
-  }
-
-  async function fetchFriends() {
-    try {
-      const friends = await api.get(`/friends/${userData.userId}`, config);
-      setFriendsData(friends.data);
-    } catch (err) {
-      console.error("⚠ Error fetching friends data", err);
-    }
-  }
-
-  async function searchUsername(username) {
-    try {
-      const searchResponse = await api.get(`user/searchName/${username}`);
-      // se algum dos usuários retornados for amigo, retornar eles primeiro na array
-      const friends = friendsData.friends;
-      const friendsIds = friends.map((friend) => friend.id);
-      const filteredUsers = searchResponse.data.filter(
-        (user) => !friendsIds.includes(user.id)
-      );
-      const filteredFriends = searchResponse.data.filter((user) =>
-        friendsIds.includes(user.id)
-      );
-
-      if (filteredFriends.length > 0) {
-        filteredFriends.forEach((user) => {
-          user.isFriend = true;
+    useEffect(() => {
+        fetchUserData().then(({ data }) => {
+            setDisabled(true);
+            fetchFriends(data?.id);
         });
-      }
-      if (filteredUsers.length > 0) {
-        filteredUsers.forEach((user) => {
-          user.isFriend = false;
-        });
-      }
+    }, [location]); // eslint-disable-line react-hooks/exhaustive-deps
 
-      setUsers([...filteredFriends, ...filteredUsers]);
-    } catch (err) {
-      console.error("⚠ Error searching users");
-      setUsers([]);
+    async function fetchUserData() {
+        // try {
+        //     const user = await api.get(`/user/session`, config);
+
+        //     setUserData(user.data);
+        // } catch (err) {
+        //     console.error("⚠ Error fetching user data", err);
+        // }
+        return await api.get(`/user/session`, config);
     }
-  }
 
-  function navigateToUserPage(userId) {
-    navigate(`/user/${userId}`);
-    setInputValue("");
-    setUsers([]);
-  }
+    async function fetchFriends(userId) {
+        try {
+            const friends = await api.get(`/friends/${userId}`, config);
 
-  const handleChange = (e) => {
-    const value = e.target?.value;
-    setInputValue(value);
-    searchUsername(value);
-  };
+            setFriendsData(friends.data);
+            setDisabled(false);
+        } catch (err) {
+            console.error("⚠ Error fetching friends data", err);
+        }
+    }
 
-  return (
-    <SearchInputWrapper width={width}>
-      <StyledSearchInput
-        value={inputValue}
-        onChange={handleChange}
-        placeholder="Search for people"
-        minLength={3}
-        debounceTimeout={300}
-      />
-      <SearchButton />
-      <StyledSearchList width={width}>
-        {users.length > 0 ? (
-          users.map((user) => {
-            return (
-              <li onClick={() => navigateToUserPage(user.id)} key={user.id}>
-                {user.imgUrl && (
-                  <img src={user.imgUrl} alt="User profile pic" />
-                )}
-                <span>
-                  <p>{user.username}</p>
-                  {user.isFriend ? (
-                    <p className="followingText">• following</p>
-                  ) : (
-                    <></>
-                  )}
-                </span>
-              </li>
+    async function searchUsername(username) {
+        try {
+            const searchResponse = await api.get(
+                `user/searchName/${username}`,
+                config
             );
-          })
-        ) : (
-          <></>
-        )}
-      </StyledSearchList>
-    </SearchInputWrapper>
-  );
+            // se algum dos usuários retornados for amigo, retorná-los primeiro na array
+            const friends = friendsData?.friends;
+            const friendsIds = friends.map((friend) => friend.id);
+            const filteredUsers = searchResponse.data.filter(
+                (user) => !friendsIds.includes(user.id)
+            );
+            const filteredFriends = searchResponse.data.filter((user) =>
+                friendsIds.includes(user.id)
+            );
+
+            if (filteredFriends.length > 0) {
+                filteredFriends.forEach((user) => {
+                    user.isFriend = true;
+                });
+            }
+            if (filteredUsers.length > 0) {
+                filteredUsers.forEach((user) => {
+                    user.isFriend = false;
+                });
+            }
+
+            setUsers([...filteredFriends, ...filteredUsers]);
+        } catch (err) {
+            console.error("⚠ Error searching users", err);
+            setUsers([]);
+        }
+    }
+
+    function navigateToUserPage(userId) {
+        navigate(`/user/${userId}`);
+        setInputValue("");
+        setUsers([]);
+    }
+
+    const handleChange = (e) => {
+        const value = e.target?.value;
+        setInputValue(value);
+        searchUsername(value);
+    };
+
+    return (
+        <SearchInputWrapper width={width}>
+            <StyledSearchInput
+                value={inputValue}
+                onChange={disabled ? () => {} : (e) => handleChange(e)}
+                placeholder="Search for people"
+                minLength={3}
+                debounceTimeout={300}
+                disabled={disabled}
+            />
+            <SearchButton />
+            <StyledSearchList width={width}>
+                {users.length > 0 ? (
+                    users.map((user) => {
+                        return (
+                            <li
+                                onClick={() => navigateToUserPage(user.id)}
+                                key={user.id}
+                            >
+                                {user.imgUrl && (
+                                    <img
+                                        src={user.imgUrl}
+                                        alt="User profile pic"
+                                    />
+                                )}
+                                <span>
+                                    <p>{user.username}</p>
+                                    {user.isFriend ? (
+                                        <p className="followingText">
+                                            • following
+                                        </p>
+                                    ) : (
+                                        <></>
+                                    )}
+                                </span>
+                            </li>
+                        );
+                    })
+                ) : (
+                    <></>
+                )}
+            </StyledSearchList>
+        </SearchInputWrapper>
+    );
 }
