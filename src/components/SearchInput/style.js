@@ -40,6 +40,11 @@ export const StyledSearchInput = styled(DebounceInput)`
   &::placeholder {
     color: #949494;
   }
+
+  &:disabled {
+    cursor: not-allowed;
+    background-color: #515151;
+  }
 `;
 
 export const SearchButton = styled(FaSearch)`

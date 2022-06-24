@@ -121,3 +121,12 @@ export const WriteContent = styled.form`
         }
     }
 `;
+
+export const EmptyPostText = styled.p`
+    font-family: "Lato", sans-serif;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #fff;
+
+    margin-left: 1.5rem;
+`;

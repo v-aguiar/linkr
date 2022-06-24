@@ -14,7 +14,7 @@ import {
 export default function SearchInput({ width = "100%" }) {
     const [inputValue, setInputValue] = useState("");
     const [users, setUsers] = useState([]);
-    const [userData, setUserData] = useState({});
+    const [disabled, setDisabled] = useState(true);
     const [friendsData, setFriendsData] = useState({});
 
     const { userInfo } = useContext(UserContext);
@@ -28,35 +28,29 @@ export default function SearchInput({ width = "100%" }) {
     };
 
     useEffect(() => {
-        fetchUserData();
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-    useEffect(() => {
-        if (userData?.userId) {
-            fetchFriends();
-        }
-    }, [userData, location]); // eslint-disable-line react-hooks/exhaustive-deps
+        fetchUserData().then(({ data }) => {
+            setDisabled(true);
+            fetchFriends(data?.id);
+        });
+    }, [location]); // eslint-disable-line react-hooks/exhaustive-deps
 
     async function fetchUserData() {
-        try {
-            const user = await api.get(`/user/session`, config);
+        // try {
+        //     const user = await api.get(`/user/session`, config);
 
-            setUserData(user.data);
-        } catch (err) {
-            console.error("⚠ Error fetching user data", err);
-        }
+        //     setUserData(user.data);
+        // } catch (err) {
+        //     console.error("⚠ Error fetching user data", err);
+        // }
+        return await api.get(`/user/session`, config);
     }
 
-    async function fetchFriends() {
+    async function fetchFriends(userId) {
         try {
-            const friends = await api.get(
-                `/friends/${userData.userId}`,
-                config
-            );
-
-            console.log("friends from search", friends);
+            const friends = await api.get(`/friends/${userId}`, config);
 
             setFriendsData(friends.data);
+            setDisabled(false);
         } catch (err) {
             console.error("⚠ Error fetching friends data", err);
         }
@@ -64,9 +58,12 @@ export default function SearchInput({ width = "100%" }) {
 
     async function searchUsername(username) {
         try {
-            const searchResponse = await api.get(`user/searchName/${username}`);
-            // se algum dos usuários retornados for amigo, retornar eles primeiro na array
-            const friends = friendsData.friends;
+            const searchResponse = await api.get(
+                `user/searchName/${username}`,
+                config
+            );
+            // se algum dos usuários retornados for amigo, retorná-los primeiro na array
+            const friends = friendsData?.friends;
             const friendsIds = friends.map((friend) => friend.id);
             const filteredUsers = searchResponse.data.filter(
                 (user) => !friendsIds.includes(user.id)
@@ -88,7 +85,7 @@ export default function SearchInput({ width = "100%" }) {
 
             setUsers([...filteredFriends, ...filteredUsers]);
         } catch (err) {
-            console.error("⚠ Error searching users");
+            console.error("⚠ Error searching users", err);
             setUsers([]);
         }
     }
@@ -109,10 +106,11 @@ export default function SearchInput({ width = "100%" }) {
         <SearchInputWrapper width={width}>
             <StyledSearchInput
                 value={inputValue}
-                onChange={handleChange}
+                onChange={disabled ? () => {} : (e) => handleChange(e)}
                 placeholder="Search for people"
                 minLength={3}
                 debounceTimeout={300}
+                disabled={disabled}
             />
             <SearchButton />
             <StyledSearchList width={width}>
