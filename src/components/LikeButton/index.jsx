@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from "react";
+﻿import { useState, useEffect, useId } from "react";
 import ReactTooltip from "react-tooltip";
 
 import api from "../../services/api";
@@ -17,6 +17,8 @@ export default function LikeButton({ userId, postId }) {
         first: "",
         second: "",
     });
+
+    const tipId = useId();
 
     useEffect(() => {
         const fetchLikes = async () => {
@@ -117,6 +119,7 @@ export default function LikeButton({ userId, postId }) {
         <StyledLikeButton>
             {showTooltip && (
                 <ReactTooltip
+                    id={tipId}
                     className="toolTip"
                     effect="solid"
                     place="bottom"
@@ -133,6 +136,7 @@ export default function LikeButton({ userId, postId }) {
                 )}
                 <p
                     data-tip="ReactTooltip"
+                    data-for={tipId}
                     onMouseEnter={() => setShowTooltip(true)}
                     onMouseLeave={() => {
                         setShowTooltip(false);
