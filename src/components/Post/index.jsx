@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { PostContainer } from "./style";
 
 export default function Post({ info, userId }) {
-    const { username, text, userImg, id } = info;
+    const { username, text, userImg, id, postUserId } = info;
     const navigate = useNavigate();
 
     function handleHashtag(val) {
@@ -21,7 +21,9 @@ export default function Post({ info, userId }) {
                 {userId ? <LikeButton userId={userId} postId={id} /> : <></>}
             </section>
             <div className="post-body">
-                <h2>{username}</h2>
+                <h2 onClick={() => navigate(`/user/${postUserId}`)}>
+                    {username}
+                </h2>
                 <p>
                     <ReactHashtag onHashtagClick={handleHashtag}>
                         {text}

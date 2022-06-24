@@ -27,8 +27,6 @@ export default function FollowButton({ friendId }) {
             try {
                 const user = await api.get(`/user/session`, config);
 
-                console.log("userData: ", user.data);
-
                 setUserData(user.data);
                 setControlFetch(controlFetch ? false : true);
             } catch (err) {
