@@ -13,6 +13,11 @@ import Trending from "../../components/Trending";
 import { Container, StyledUserSpan } from "./style";
 import { EmptyPostText } from "../TimelinePage/style";
 
+//import Comments from "../../components/Comments/Comments";
+//import { CgRepeat } from 'react-icons/cg';
+//import ButtonComments from "../../components/Comments/ButtonComments";
+//import Reposts from "../../components/Reposts/Reposts";
+
 export default function UserPage() {
     const [userPageData, setUserPageData] = useState({});
     const [userData, setUserData] = useState({});
