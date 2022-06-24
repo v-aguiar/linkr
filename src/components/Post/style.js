@@ -50,6 +50,13 @@ export const PostContainer = styled.article`
             color: #fff;
             line-height: 20px;
             font-size: 17px;
+
+            transition: all 0.3s ease-in-out;
+
+            &:hover {
+                cursor: pointer;
+                filter: brightness(1.1);
+            }
         }
         p {
             font-size: 0.9rem;

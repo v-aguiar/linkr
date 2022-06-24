@@ -1,48 +1,38 @@
 ﻿import styled from "styled-components";
 
 export const StyledUserSpan = styled.span`
-  display: flex;
-  align-items: center;
-  align-self: flex-start;
-  justify-content: space-between;
-
-  margin-top: 3.3125rem;
-  width: 100%;
-
-  > span {
     display: flex;
     align-items: center;
+    align-self: flex-start;
+    justify-content: space-between;
 
-    > h1 {
-      font-family: "Oswald", sans-serif;
-      font-weight: 700;
-      font-size: 2.6875rem;
-      color: #fff;
+    margin-top: 3.3125rem;
+    width: 100%;
 
-      margin: 0 1.125rem;
+    > span {
+        display: flex;
+        align-items: center;
+
+        > h1 {
+            font-family: "Oswald", sans-serif;
+            font-weight: 700;
+            font-size: 2.6875rem;
+            color: #fff;
+
+            margin: 0 1.125rem;
+        }
+
+        > img {
+            border-radius: 50%;
+            height: 3.125rem;
+            width: 3.125rem;
+        }
     }
-
-    > img {
-      border-radius: 50%;
-      height: 3.125rem;
-      width: 3.125rem;
-    }
-  }
 `;
 
-export const Div = styled.div`
-  margin-top: 2.5625rem;
-  padding: 1.25rem;
-
-  width: 38.1875rem;
-  height: 17.25rem;
-
-  color: #fff;
-  background-color: #171717;
-
-  font-family: "Lato", sans-serif;
-  font-weight: 400;
-  font-size: 1.1875rem;
-
-  border-radius: 1rem;
+export const Container = styled.div`
+    display: flex;
+    justify-content: center;
+    background-color: #333333;
+    gap: 25px;
 `;

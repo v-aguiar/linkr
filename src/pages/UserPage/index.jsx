@@ -7,12 +7,16 @@ import UserContext from "../../contexts/UserContext";
 import MainScreen from "../../components/MainScreen";
 import api from "../../services/api";
 
-import { Div, StyledUserSpan } from "./style";
 import FollowButton from "../../components/FollowButton";
+import Post from "../../components/Post";
+import Trending from "../../components/Trending";
+import { Container, StyledUserSpan } from "./style";
+import { EmptyPostText } from "../TimelinePage/style";
 
 export default function UserPage() {
     const [userPageData, setUserPageData] = useState({});
     const [userData, setUserData] = useState({});
+    const [posts, setPosts] = useState([]);
     const { id } = useParams();
 
     const { userInfo } = useContext(UserContext);
@@ -20,6 +24,7 @@ export default function UserPage() {
 
     useEffect(() => {
         fetchUserPageData();
+        fetchUserPosts();
     }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
@@ -64,24 +69,52 @@ export default function UserPage() {
         }
     }
 
+    async function fetchUserPosts() {
+        const config = {
+            headers: {
+                Authorization: `Bearer ${userInfo.token}`,
+            },
+        };
+
+        try {
+            const userPosts = await api.get(`posts/user/${id}`, config);
+
+            setPosts(userPosts.data);
+        } catch (err) {
+            console.error("⚠ Error fetching user posts", err);
+        }
+    }
+
     return (
-        <MainScreen>
-            {userPageData ? (
-                <StyledUserSpan>
-                    <span>
-                        <img src={userPageData.imgUrl} alt="User profile pic" />
-                        <h1> {userPageData.username}'s posts</h1>
-                    </span>
-                    {userData.userId * 1 === id * 1 ? (
-                        <></>
-                    ) : (
-                        <FollowButton friendId={id} />
-                    )}
-                </StyledUserSpan>
-            ) : (
-                <ThreeDots />
-            )}
-            <Div>POSTS ↔ ⚠ Em desenvolvimento...</Div>
-        </MainScreen>
+        <Container>
+            <MainScreen>
+                {userPageData ? (
+                    <StyledUserSpan>
+                        <span>
+                            <img
+                                src={userPageData.imgUrl}
+                                alt="User profile pic"
+                            />
+                            <h1> {userPageData.username}'s posts</h1>
+                        </span>
+                        {userData.userId * 1 === id * 1 ? (
+                            <></>
+                        ) : (
+                            <FollowButton friendId={id} />
+                        )}
+                    </StyledUserSpan>
+                ) : (
+                    <ThreeDots />
+                )}
+                {posts.length === 0 ? (
+                    <EmptyPostText>No posts yet...</EmptyPostText>
+                ) : (
+                    posts.map((post, index) => {
+                        return <Post info={post} key={index} userId={id} />;
+                    })
+                )}
+            </MainScreen>
+            <Trending />
+        </Container>
     );
 }
