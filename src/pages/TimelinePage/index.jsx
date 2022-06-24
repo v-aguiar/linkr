@@ -1,12 +1,9 @@
 import { useState, useContext, useEffect } from "react";
-import LinkPreview from "../../components/Link";
 import MainScreen from "../../components/MainScreen/";
-import LikeButton from "../../components/LikeButton";
+import Post from "../../components/Post";
 import UserContext from "../../contexts/UserContext";
 import api from "../../services/api";
 import { PostContainer, Title, PostWrite, WriteContent } from "./style";
-import ReactHashtag from "@mdnm/react-hashtag";
-import { useNavigate } from "react-router-dom";
 
 export default function TimelinePage() {
     const [posts, setPosts] = useState([]);
@@ -14,7 +11,6 @@ export default function TimelinePage() {
     const { userInfo } = useContext(UserContext);
     const [writePost, setWritePost] = useState({ text: "", url: "" });
     const [submited, setSubmited] = useState(false);
-    const navigate = useNavigate();
 
     const config = {
         headers: {
@@ -73,11 +69,6 @@ export default function TimelinePage() {
             });
     }
 
-    function handleHashtag(val) {
-        let hashtag = val.split("#")[1];
-        navigate(`/hashtag/${hashtag}`);
-    }
-
     useEffect(() => {
         getPosts();
         getUserId();
@@ -116,28 +107,7 @@ export default function TimelinePage() {
                 </WriteContent>
             </PostWrite>
             {posts.map((post, index) => {
-                const { username, text, userImg, id } = post;
-                return (
-                    <PostContainer key={index}>
-                        <section>
-                            <img className="user" src={userImg} alt="" />
-                            {userId ? (
-                                <LikeButton userId={userId} postId={id} />
-                            ) : (
-                                <></>
-                            )}
-                        </section>
-                        <div className="post-body">
-                            <h2>{username}</h2>
-                            <p>
-                                <ReactHashtag onHashtagClick={handleHashtag}>
-                                    {text}
-                                </ReactHashtag>
-                            </p>
-                            <LinkPreview metaData={post} />
-                        </div>
-                    </PostContainer>
-                );
+                return <Post info={post} key={index} userId={userId} />;
             })}
         </MainScreen>
     );
